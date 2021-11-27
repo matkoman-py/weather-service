@@ -1,0 +1,15 @@
+.text {
+  font-weight: 700;
+  color: grey;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+.wrapper {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.temperature {
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  font-size: 25px;
+}

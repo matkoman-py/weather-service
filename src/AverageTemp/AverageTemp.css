@@ -1,0 +1,12 @@
+.temp {
+  color: white;
+  font-weight: 700;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-size: 100px;
+  margin-top: 0 !important;
+}
+
+.celsius {
+  font-size: 40px;
+  vertical-align: text-top;
+}

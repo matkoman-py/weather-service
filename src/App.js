@@ -1,17 +1,37 @@
-import { Grid } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import React, { useState } from "react";
 import "./App.css";
 import AverageTemp from "./AverageTemp/AverageTemp";
 import CustomInput from "./CustomInput/CustomInput";
 import { WeatherInfo } from "./data";
-import NextDays from "./NextDays/NextDays";
+import Dates from "./Dates/Dates";
+import Day from "./Day/Day";
 
 const App = () => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [days, setDays] = useState([]);
   const [avgTemp, setAvgTemp] = useState(0);
+  const dayArray = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
-  const searchClicked = () => {
+  const fetchCurrent = async () => {
+    const response = await fetch(
+      "https://api.openweathermap.org/data/2.5/weather?q=Belgrade&appid=bb9fdd0eaa5ef1f813ec710f6e065bac"
+    );
+    const data = await response.json();
+    return data;
+  };
+
+  const searchClicked = async () => {
+    const current = await fetchCurrent();
+
     const info = WeatherInfo;
     const sum = info.reduce((prev, curr) => {
       prev += curr.avg_temp;
@@ -24,9 +44,8 @@ const App = () => {
   };
 
   return (
-    <Grid
-      container
-      direction="row"
+    <Stack
+      spacing={2}
       justifyContent="center"
       alignItems="center"
       className="app"
@@ -36,25 +55,24 @@ const App = () => {
           : "linear-gradient(150deg, #CCFFFF, #FFFFCC)",
       }}
     >
-      <Grid item xs={1} sm={1} md={2} lg={3} />
-      <Grid
-        container
-        item
-        xs={10}
-        sm={10}
-        md={8}
-        lg={6}
-        justifyContent="center"
-        alignItems="center"
-        className="grid"
-        direction="column"
-      >
-        <CustomInput handler={searchClicked} />
-        {isDataLoaded && <AverageTemp average={avgTemp} />}
-        {isDataLoaded && <NextDays days={days.slice(0, -3)} />}
-      </Grid>
-      <Grid item xs={1} sm={1} md={2} lg={3} />
-    </Grid>
+      <CustomInput handler={searchClicked} />
+      {isDataLoaded && <Dates firstDay={days[0]} lastDay={days[6]} />}
+      {isDataLoaded && <AverageTemp average={avgTemp} />}
+      {isDataLoaded && (
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+        >
+          {days.slice(0, -3).map((day) => {
+            const day_avg = day.avg_temp;
+            const date = dayArray[new Date(day.date).getDay()];
+            return <Day date={date} day_avg={day_avg} key={date} />;
+          })}
+        </Grid>
+      )}
+    </Stack>
   );
 };
 
