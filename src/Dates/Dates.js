@@ -40,11 +40,9 @@ const Dates = (props) => {
   }, []);
 
   return (
-    <div>
-      <h4 className="text">
-        {firstMonth} {firstDay} - {secondMonth} {lastDay} {year}
-      </h4>
-    </div>
+    <h4 className="text">
+      {firstMonth} {firstDay} - {secondMonth} {lastDay} {year}
+    </h4>
   );
 };
 

@@ -41,7 +41,7 @@ const CustomInput = (props) => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
-                  <IconButton onClick={props.handler}>
+                  <IconButton onClick={() => props.handler(city)}>
                     <SearchIcon />
                   </IconButton>
                 </InputAdornment>

@@ -14,8 +14,8 @@ const CountrySelect = () => {
   const renderCustomItem = (id) => {
     const item = arrayOptions.find((item) => item.id === id);
     return (
-      <div className="md-country-picker-item">
-        <img className="md-country-picker-flag" src={item.image} alt="Flag" />
+      <div className="country-picker-item">
+        <img className="country-picker-flag" src={item.image} alt="Flag" />
         {id}
       </div>
     );

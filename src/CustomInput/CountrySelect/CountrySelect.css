@@ -1,10 +1,10 @@
-.md-country-picker-item {
+.country-picker-item {
   position: relative;
   line-height: 20px;
   padding: 10px 0 10px 40px;
 }
 
-.md-country-picker-flag {
+.country-picker-flag {
   position: absolute;
   left: 0;
   height: 20px;
