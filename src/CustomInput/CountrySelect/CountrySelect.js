@@ -21,17 +21,12 @@ const CountrySelect = () => {
     );
   };
 
-  const handleChange = (e) => {
-    alert(e);
-  };
-
   return (
     <Select
       value={"SER"}
       defaultValue={"SER"}
       style={{ height: "56px" }}
       renderValue={(value) => renderCustomItem(value)}
-      onChange={handleChange}
     >
       {arrayOptions.map((item) => {
         return (

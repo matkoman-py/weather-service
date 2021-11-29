@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./Dates.css";
 const Dates = (props) => {
   const months = [
     "January",

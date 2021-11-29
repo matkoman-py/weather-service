@@ -1,4 +1,4 @@
-import { Grid, Stack } from "@mui/material";
+import { CircularProgress, Grid, Stack } from "@mui/material";
 import React, { useState } from "react";
 import "./App.css";
 import AverageTemp from "./AverageTemp/AverageTemp";
@@ -9,23 +9,35 @@ import Dates from "./Dates/Dates";
 import Day from "./Day/Day";
 
 const App = () => {
+  // osnovni stejtovi koji su potrebni u aplikaciji:
+  // stejt koji se koristi da signalizira da su podaci ucitani
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  // stejt pomocu kojeg simuliram ucitavanje
+  const [loadingData, setLoadingData] = useState(false);
+  // niz u koji ucitavam podatke o 10 dana
   const [days, setDays] = useState([]);
+  // prosecna temperatura u sledecih 10 dana
   const [avgTemp, setAvgTemp] = useState(0);
+  // najskorije izmerena temperatura
   const [currentTemp, setCurrentTemp] = useState("");
+  // vreme merenja temperature
   const [hoursMinutes, setHoursMinutes] = useState("");
+  // grad za koji ucitavamo podatke
   const [city, setCity] = useState("");
 
+  // niz koji mi treba za dobijanje imena dana pomocu datuma preko getDay() metode
   const dayArray = [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
     "Saturday",
-    "Sunday",
   ];
 
+  // asinhrona funkcija koja poziva api da nabavi najskorije izmerenu temperaturu i vreme merenja
+  // vraca ovo u obliku normalnog js objekta
   const fetchCurrent = async () => {
     const response = await fetch(
       "https://api.openweathermap.org/data/2.5/weather?q=Belgrade&appid=bb9fdd0eaa5ef1f813ec710f6e065bac"
@@ -34,6 +46,7 @@ const App = () => {
     return data;
   };
 
+  // pomocna metoda za formatiranje sati i minuta da ne bi imali slucaj npr. 9:9, vec 09:09
   const addZero = (i) => {
     if (i < 10) {
       i = "0" + i;
@@ -41,7 +54,14 @@ const App = () => {
     return i;
   };
 
+  // hendler metoda koju prosledjujem inputu i trigeruje se na klik search buttona
+  // u sustini sva logika se nalazi u ovoj funkciji
   const searchClicked = async (city) => {
+    // postavljanje stejta za loading na true - krenuce da se prikazuje na stranici
+    setLoadingData(true);
+
+    /* nabavljanje najskorijih informacija za hard code-ovan Beograd u mom slucaju, ali lagano izmenljivo prosledjivanjem city-ja
+       fetchCurrent metodi */
     const current = await fetchCurrent();
     const currentTempKelvin = current.main.temp;
     const currentTempCelsius = currentTempKelvin - 273.15;
@@ -49,27 +69,40 @@ const App = () => {
     const h = addZero(currentDateTime.getHours());
     const m = addZero(currentDateTime.getMinutes());
 
+    // postavljanje stejtova vezanih za najskorije informacije
     setHoursMinutes(h + ":" + m);
-    setCurrentTemp(currentTempCelsius.toFixed(2));
+    setCurrentTemp(currentTempCelsius.toFixed(1));
     setCity(city);
 
+    // ucitavanje liste dana, obrada podataka i zatim postavljanje stejtova
     const info = WeatherInfo;
     const sum = info.reduce((prev, curr) => {
       prev += curr.avg_temp;
       return prev;
     }, 0);
     const average = sum / info.length;
-    setAvgTemp(average);
+    setAvgTemp(average.toFixed(1));
     setDays(info);
-    setIsDataLoaded(true);
+
+    // timeout funkcija kojom simuliram da ucitavanje traje jednu sekundu
+    setTimeout(() => {
+      setIsDataLoaded(true);
+      setLoadingData(false);
+    }, 1000);
   };
 
   return (
+    /*odlucio sam se da sve komponente trpam u jedan veliki stack zbog nacina rasporedjivanja komponenti (kao kolona jedna je sve)
+    sto se komponenti tice, one su dosta bazicne, renderuju se u zavisnosti od isDataLoaded stejta, jedina komponenta gde ima nekog
+    izracunavanja je Dates, u njoj racunam da li su prvi dan i poslednji dan u istom mesecu, ako nisu bice malo drugaciji prikaz
+    nego inace
+    iskoristio sam Grid da modelujem sledecih 7 dana*/
     <Stack
       spacing={2}
       justifyContent="center"
       alignItems="center"
       className="app"
+      // kada je data ucitana menjamo pozadinu aplikacije
       style={{
         backgroundImage: isDataLoaded
           ? "linear-gradient(150deg, #FFFFCC, #CCFFFF)"
@@ -77,6 +110,7 @@ const App = () => {
       }}
     >
       <CustomInput handler={searchClicked} />
+      {loadingData && <CircularProgress />}
       {isDataLoaded && (
         <Current
           city={city}
