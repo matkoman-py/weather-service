@@ -24,6 +24,9 @@ const App = () => {
   const [hoursMinutes, setHoursMinutes] = useState("");
   // grad za koji ucitavamo podatke
   const [city, setCity] = useState("");
+  // boje za gradijent
+  const [firstColor, setFirstColor] = useState("");
+  const [secondColor, setSecondColor] = useState("");
 
   // niz koji mi treba za dobijanje imena dana pomocu datuma preko getDay() metode
   const dayArray = [
@@ -54,6 +57,43 @@ const App = () => {
     return i;
   };
 
+  // -40 #07219D
+  // -30 395AF6
+  // -20 3992F6
+  // -10 39B1F6
+  // 0 A1D7EF
+  // 10 A1EFE6
+  // 20 F7CF42
+  // 30 F6CF7E
+  // 40 F6A749
+  // podesavanje boja
+  const selectColors = (temp) => {
+    if (temp < -30) {
+      setFirstColor("#07219D");
+      setSecondColor("#395AF6");
+    } else if (temp >= -30 && temp < -20) {
+      setFirstColor("#395AF6");
+      setSecondColor("#3992F6");
+    } else if (temp >= -20 && temp < -10) {
+      setFirstColor("#3992F6");
+      setSecondColor("#39B1F6");
+    } else if (temp >= -10 && temp < 0) {
+      setFirstColor("#39B1F6");
+      setSecondColor("#A1D7EF");
+    } else if (temp >= 0 && temp < 10) {
+      setFirstColor("#A1D7EF");
+      setSecondColor("#A1EFE6");
+    } else if (temp >= 10 && temp < 20) {
+      setFirstColor("#A1EFE6");
+      setSecondColor("#F7CF42");
+    } else if (temp >= 20 && temp < 30) {
+      setFirstColor("#F7CF42");
+      setSecondColor("#F6CF7E");
+    } else {
+      setFirstColor("#F6CF7E");
+      setSecondColor("#F6A749");
+    }
+  };
   // hendler metoda koju prosledjujem inputu i trigeruje se na klik search buttona
   // u sustini sva logika se nalazi u ovoj funkciji
   const searchClicked = async (city) => {
@@ -83,7 +123,7 @@ const App = () => {
     const average = sum / info.length;
     setAvgTemp(average.toFixed(1));
     setDays(info);
-
+    selectColors(average);
     // timeout funkcija kojom simuliram da ucitavanje traje jednu sekundu
     setTimeout(() => {
       setIsDataLoaded(true);
@@ -93,7 +133,8 @@ const App = () => {
 
   return (
     /*odlucio sam se da sve komponente trpam u jedan veliki stack zbog nacina rasporedjivanja komponenti (kao kolona jedna je sve)
-    sto se komponenti tice, one su dosta bazicne, renderuju se u zavisnosti od isDataLoaded stejta, jedina komponenta gde ima nekog
+    sto se komponenti tice, vecinu uzimam iz MaterialUI, jer mi je on nekako najlaksi za rad i najlepse su komponente,
+    one su dosta bazicne, renderuju se u zavisnosti od isDataLoaded stejta, jedina komponenta gde ima nekog
     izracunavanja je Dates, u njoj racunam da li su prvi dan i poslednji dan u istom mesecu, ako nisu bice malo drugaciji prikaz
     nego inace
     iskoristio sam Grid da modelujem sledecih 7 dana*/
@@ -105,7 +146,7 @@ const App = () => {
       // kada je data ucitana menjamo pozadinu aplikacije
       style={{
         backgroundImage: isDataLoaded
-          ? "linear-gradient(150deg, #FFFFCC, #CCFFFF)"
+          ? `linear-gradient(150deg, ${firstColor}, ${secondColor})`
           : "linear-gradient(to right bottom, #e5f1ff, #e0f7fe, #e2fbf9, #ecfef2, #fbffed)",
       }}
     >

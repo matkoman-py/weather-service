@@ -1,5 +1,4 @@
 import { Grid } from "@mui/material";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import CountrySelect from "./CountrySelect/CountrySelect";
 import { TextField, IconButton } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -19,7 +18,7 @@ const CustomInput = (props) => {
         alignItems="center"
       >
         <Grid item container xs={4} sm={1} md={1} lg={1} justifyContent="end">
-          <WbSunnyIcon fontSize="large" />
+          <i className="fas fa-cloud-sun" style={{ fontSize: "36px" }}></i>
         </Grid>
         <Grid item xs={8} sm={4} md={4} lg={4} className="middleItem">
           <CountrySelect />
